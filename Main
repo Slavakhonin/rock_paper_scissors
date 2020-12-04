@@ -1,0 +1,94 @@
+# Write your code here
+import random
+
+username = str(input("Enter your name: "))
+print("Hello, " + username)
+default_game_option = "rock, paper, scissors"
+game_option = input()
+print("Okay, let's start")
+winning_cases = {
+    'water': ['snake', 'human', 'tree', 'wolf', 'sponge', 'paper', 'air'],
+    'dragon': ['human', 'tree', 'wolf', 'sponge', 'paper', 'air', 'water'],
+    'devil': ['tree', 'wolf', 'sponge', 'paper', 'air', 'water', 'dragon'],
+    'lightning': ['wolf', 'sponge', 'paper', 'air', 'water', 'dragon', 'devil'],
+    'gun': ['sponge', 'paper', 'air', 'water', 'dragon', 'devil', 'lightning'],
+    'rock': ['paper', 'air', 'water', 'dragon', 'devil', 'lightning', 'gun'],
+    'fire': ['air', 'water', 'dragon', 'devil', 'lightning', 'gun', 'rock'],
+    'scissors': ['water', 'dragon', 'devil', 'lightning', 'gun', 'rock', 'fire'],
+    'snake': ['dragon', 'devil', 'lightning', 'gun', 'rock', 'fire', 'scissors'],
+    'human': ['devil', 'lightning', 'gun', 'rock', 'fire', 'scissors', 'snake'],
+    'tree': ['lightning', 'gun', 'rock', 'fire', 'scissors', 'snake', 'human'],
+    'wolf': ['gun', 'rock', 'fire', 'scissors', 'snake', 'human', 'tree'],
+    'sponge': ['rock', 'fire', 'scissors', 'snake', 'human', 'tree', 'wolf'],
+    'paper': ['rock', 'fire', 'scissors', 'snake', 'human', 'tree', 'wolf', 'sponge'],
+    'air': ['fire', 'scissors', 'snake', 'human', 'tree', 'wolf', 'sponge', 'paper']
+}
+losing_cases = {
+    'water': ['scissors', 'fire', 'rock', 'hun', 'lightning', 'devil', 'dragon'],
+    'dragon': ['snake', 'scissors', 'fire', 'rock', 'gun', 'lightning', 'devil'],
+    'devil': ['tree', 'human', 'snake', 'scissors', 'fire', 'rock', 'gun'],
+    'gun': ['wolf', 'tree', 'human', 'snake', 'scissors', 'fire', 'rock'],
+    'rock': ['sponge', 'wolf', 'tree', 'human', 'snake', 'scissors', 'fire'],
+    'fire': ['paper', 'sponge', 'wolf', 'tree', 'human', 'snake', 'scissors'],
+    'scissors': ['air', 'paper', 'sponge', 'wolf', 'tree', 'human', 'snake'],
+    'snake': ['water', 'air', 'paper', 'sponge', 'wolf', 'tree', 'human'],
+    'human': ['dragon', 'water', 'air', 'paper', 'sponge', 'wolf', 'tree'],
+    'tree': ['devil', 'dragon', 'water', 'air', 'paper', 'sponge', 'wolf'],
+    'wolf': ['lightning', 'devil', 'dragon', 'water', 'air', 'paper', 'sponge'],
+    'sponge': ['gun', 'lightning', 'devil', 'dragon', 'water', 'air', 'paper'],
+    'paper': ['rock', 'gun', 'lightning', 'devil', 'dragon', 'water', 'air'],
+    'air': ['fire', 'rock', 'gun', 'lightning', 'devil', 'dragon', 'water'],
+    'lightning': ['tree', 'human', 'snake', 'scissors', 'fire', 'rock', 'gun']
+}
+user_choice = str(input())
+computer_variants = ('scissors', 'paper', 'rock')
+computer_choice = computer_variants[random.randint(0, 2)]
+
+#Printing User Scores Rating
+def print_rating(username):
+    rating = open("rating.txt", "r")
+    for line in rating:
+        if str(line.split()[0]) == username:
+            rating.close()
+            return("Your rating: " + str(line.split()[1]))
+    rating.close()
+    return("Your rating: 0")
+
+#Getting initial user Score
+def get_rating(username):
+    rating = open("rating.txt", "r")
+    for line in rating:
+        if str(line.split()[0]) == username:
+            rating.close()
+            return(int(line.split()[1]))
+    rating.close()
+    return int(0)
+
+
+def main_game(user_choice, computer_choice):
+    global points
+    if user_choice == computer_choice:
+        print("There is a draw {}".format(computer_choice))
+        points += 50
+    else:
+        for keys in winning_cases:
+            if user_choice in keys:
+                if computer_choice not in winning_cases[user_choice]:
+                    print("Well done. The computer chose {} and failed".format(computer_choice))
+                    points += 100
+                else:
+                    print("Sorry, but the computer chose {}".format(computer_choice))
+
+
+
+points = get_rating(username)
+while user_choice != "!exit":
+    computer_choice = computer_variants[random.randint(0, 2)]
+    if user_choice == "!rating":
+        print("Your rating: " + str(points))
+    elif user_choice in winning_cases.keys():
+        main_game(user_choice, computer_choice)
+    else:
+        print("Invalid input")
+    user_choice = str(input())
+print("Bye!")
